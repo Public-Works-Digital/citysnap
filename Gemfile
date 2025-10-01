@@ -66,3 +66,5 @@ end
 
 # Use devise for authentication
 gem "devise", "~> 4.9"
+
+gem "claude-on-rails", "~> 0.2.0", group: :development

@@ -65,7 +65,6 @@ class IssuesController < ApplicationController
     end
 
     # Only allow a list of trusted parameters through.
-    # FIX: Help
     def issue_params
       params.expect(issue: [ :comment, :photo ])
     end
