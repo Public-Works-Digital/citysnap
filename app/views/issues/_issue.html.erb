@@ -1,5 +1,12 @@
 <div id="<%= dom_id issue %>" class="w-full sm:w-auto my-5 space-y-5">
   <div>
+    <% if issue.photo.attached? %>
+      <%= image_tag issue.photo.variant(resize_to_limit: [600, 600]), class: "rounded-md" %>
+    <% else %>
+      <p class="italic text-gray-500">No photo attached</p>
+    <% end %>
+  </div>
+  <div>
     <strong class="block font-medium mb-1">Comment:</strong>
     <%= issue.comment %>
   </div>

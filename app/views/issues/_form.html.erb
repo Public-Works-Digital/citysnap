@@ -12,6 +12,17 @@
   <% end %>
 
   <div class="my-5">
+    <% if issue.photo.attached? %>
+      <div class="mb-2">
+        Current photo:<br>
+        <%= image_tag issue.photo.variant(resize_to_limit: [300, 300]), class: "rounded-md" %>
+      </div>
+    <% end %>
+    <%= form.label :new_photo %>
+    <%= form.file_field :photo, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": issue.errors[:photo].none?, "border-red-400 focus:outline-red-600": issue.errors[:photo].any?}] %>
+  </div>
+
+  <div class="my-5">
     <%= form.label :comment %>
     <%= form.textarea :comment, rows: 4, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": issue.errors[:comment].none?, "border-red-400 focus:outline-red-600": issue.errors[:comment].any?}] %>
   </div>
