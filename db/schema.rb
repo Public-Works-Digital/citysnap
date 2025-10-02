@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_02_000131) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_02_133324) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -49,6 +49,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_000131) do
     t.string "street_address"
     t.index ["latitude", "longitude"], name: "index_issues_on_latitude_and_longitude"
     t.index ["user_id"], name: "index_issues_on_user_id"
+  end
+
+  create_table "sessions", force: :cascade do |t|
+    t.string "session_id", null: false
+    t.text "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
+    t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
   create_table "users", force: :cascade do |t|
