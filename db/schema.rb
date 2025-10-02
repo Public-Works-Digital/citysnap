@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_02_150750) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_02_160755) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -39,6 +39,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_150750) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "categories", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.integer "parent_id"
+    t.integer "position", default: 0, null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_categories_on_active"
+    t.index ["parent_id", "position"], name: "index_categories_on_parent_id_and_position"
+    t.index ["parent_id"], name: "index_categories_on_parent_id"
+  end
+
   create_table "issues", force: :cascade do |t|
     t.integer "user_id", null: false
     t.text "comment"
@@ -48,6 +61,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_150750) do
     t.decimal "longitude", precision: 11, scale: 8
     t.string "street_address"
     t.string "status", default: "received", null: false
+    t.integer "category_id"
+    t.index ["category_id"], name: "index_issues_on_category_id"
     t.index ["latitude", "longitude"], name: "index_issues_on_latitude_and_longitude"
     t.index ["status"], name: "index_issues_on_status"
     t.index ["user_id"], name: "index_issues_on_user_id"
@@ -75,5 +90,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_150750) do
   end
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "categories", "categories", column: "parent_id"
+  add_foreign_key "issues", "categories"
   add_foreign_key "issues", "users"
 end

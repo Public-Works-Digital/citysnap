@@ -25,6 +25,13 @@
     </div>
   <% end %>
 
+  <!-- Category -->
+  <% if issue.category %>
+    <p class="text-xs text-gray-600 mb-2">
+      <%= issue.category.name %>
+    </p>
+  <% end %>
+
   <!-- Issue Description -->
   <p class="text-sm text-gray-900 font-medium mb-2 line-clamp-2">
     <%= issue.comment.presence || "No description provided" %>

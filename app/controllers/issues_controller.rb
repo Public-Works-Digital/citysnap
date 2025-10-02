@@ -1,6 +1,6 @@
 class IssuesController < ApplicationController
   before_action :authenticate_user!, except: %i[ show public ]
-  before_action :set_issue, only: %i[ show edit update destroy ]
+  before_action :set_issue, only: %i[  edit update destroy ]
 
   # GET /issues or /issues.json
   def index
@@ -32,6 +32,8 @@ class IssuesController < ApplicationController
 
   # GET /issues/1 or /issues/1.json
   def show
+    @issue = Issue.find(params[:id])
+    @my_issue = user_signed_in? && current_user.issues.exists?(id: @issue.id)
   end
 
   # GET /issues/new
@@ -93,6 +95,6 @@ class IssuesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def issue_params
-      params.expect(issue: [ :comment, :photo, :latitude, :longitude, :street_address ])
+      params.expect(issue: [ :comment, :photo, :latitude, :longitude, :street_address, :category_id ])
     end
 end

@@ -1,5 +1,6 @@
 class Issue < ApplicationRecord
   belongs_to :user
+  belongs_to :category, optional: true  # Will be required after seeding
   has_one_attached :photo
 
   # Status enum
@@ -19,6 +20,21 @@ class Issue < ApplicationRecord
   # Status validations
   validates :status, presence: true
   validates :status, inclusion: { in: %w[received assigned closed] }
+
+  # Category validation - ensure it's a leaf node (level 3)
+  validate :category_must_be_leaf_node, if: :category_id?
+
+  def category_must_be_leaf_node
+    return unless category
+
+    if category.level != 3
+      errors.add(:category, "must be a specific issue type (level 3)")
+    end
+
+    unless category.leaf?
+      errors.add(:category, "must be a leaf category (cannot have subcategories)")
+    end
+  end
 
   # Location validations - only validate if present to allow existing issues without location
   validates :latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }, allow_nil: true
@@ -43,6 +59,10 @@ class Issue < ApplicationRecord
     when "closed"
       "bg-green-100 text-green-800"
     end
+  end
+
+  def category_full_name
+    category&.full_name || "Uncategorized"
   end
 
   private

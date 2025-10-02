@@ -1,0 +1,33 @@
+# Main Category
+vehicles:
+  name: "Vehicles (Accidents, traffic, & parking)"
+  position: 0
+  active: true
+
+# Sub-categories
+vehicles_accident:
+  name: "Accident"
+  parent: vehicles
+  position: 0
+  active: true
+
+vehicles_parking:
+  name: "Parking"
+  parent: vehicles
+  position: 1
+  active: true
+
+# Leaf nodes (Issue Types)
+vehicles_hit_and_run:
+  name: "Hit and run"
+  description: "Car ran into someone and left before police arrived"
+  parent: vehicles_accident
+  position: 0
+  active: true
+
+vehicles_parking_crosswalk:
+  name: "Parking in crosswalk"
+  description: "Parked car preventing people from safely crossing a street"
+  parent: vehicles_parking
+  position: 0
+  active: true

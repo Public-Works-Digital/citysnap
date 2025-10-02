@@ -2,6 +2,7 @@
 
 one:
   user: one
+  category: vehicles_hit_and_run
   comment: Pothole on Main Street
   latitude: 40.7128
   longitude: -74.0060
@@ -10,6 +11,7 @@ one:
 
 two:
   user: two
+  category: vehicles_parking_crosswalk
   comment: Broken streetlight
   latitude: 37.7749
   longitude: -122.4194
@@ -19,5 +21,6 @@ two:
 # Issue without location (for testing optional location)
 three:
   user: one
+  category: vehicles_hit_and_run
   comment: General complaint
   status: received
