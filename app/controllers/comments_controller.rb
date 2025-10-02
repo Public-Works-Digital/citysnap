@@ -7,7 +7,13 @@ class CommentsController < ApplicationController
     @comment.user = current_user
 
     if @comment.save
-      redirect_to @issue, notice: "Comment added successfully."
+      # Check if officer clicked "Post Comment and Close"
+      if params[:close_issue].present? && current_user.officer_user_type?
+        @issue.update(status: "closed")
+        redirect_to @issue, notice: "Comment added and issue closed successfully."
+      else
+        redirect_to @issue, notice: "Comment added successfully."
+      end
     else
       redirect_to @issue, alert: @comment.errors.full_messages.join(", ")
     end

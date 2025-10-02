@@ -96,4 +96,33 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "span.bg-blue-100", text: "Officer"
   end
+
+  test "officer should be able to post comment and close issue" do
+    sign_out @user
+    sign_in @officer
+
+    assert_equal "received", @issue.status
+
+    assert_difference("Comment.count") do
+      post issue_comments_url(@issue), params: { comment: { body: "Issue resolved" }, close_issue: "Post Comment and Close" }
+    end
+
+    @issue.reload
+    assert_equal "closed", @issue.status
+    assert_redirected_to issue_url(@issue)
+    assert_equal "Comment added and issue closed successfully.", flash[:notice]
+  end
+
+  test "citizen should not be able to close issue when posting comment" do
+    assert_equal "received", @issue.status
+
+    assert_difference("Comment.count") do
+      post issue_comments_url(@issue), params: { comment: { body: "My comment" }, close_issue: "Post Comment and Close" }
+    end
+
+    @issue.reload
+    assert_equal "received", @issue.status
+    assert_redirected_to issue_url(@issue)
+    assert_equal "Comment added successfully.", flash[:notice]
+  end
 end
