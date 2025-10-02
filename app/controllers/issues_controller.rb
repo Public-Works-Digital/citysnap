@@ -1,10 +1,15 @@
 class IssuesController < ApplicationController
-  before_action :authenticate_user!, except: %i[ show ]
+  before_action :authenticate_user!, except: %i[ show public ]
   before_action :set_issue, only: %i[ show edit update destroy ]
 
   # GET /issues or /issues.json
   def index
     @issues = current_user.issues.all
+  end
+
+  # GET /issues/public
+  def public
+    @issues = Issue.all.includes(:user).order(created_at: :desc)
   end
 
   # GET /issues/1 or /issues/1.json
