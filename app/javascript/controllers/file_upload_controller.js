@@ -1,10 +1,56 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "preview"]
+  static targets = ["input", "preview", "dropzone"]
 
   connect() {
     this.updatePreview()
+    this.setupDragAndDrop()
+  }
+
+  setupDragAndDrop() {
+    const dropzone = this.hasDropzoneTarget ? this.dropzoneTarget : this.element
+
+    // Prevent default drag behaviors
+    ;['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropzone.addEventListener(eventName, this.preventDefaults.bind(this), false)
+      document.body.addEventListener(eventName, this.preventDefaults.bind(this), false)
+    })
+
+    // Highlight drop area when item is dragged over it
+    ;['dragenter', 'dragover'].forEach(eventName => {
+      dropzone.addEventListener(eventName, () => this.highlight(dropzone), false)
+    })
+
+    ;['dragleave', 'drop'].forEach(eventName => {
+      dropzone.addEventListener(eventName, () => this.unhighlight(dropzone), false)
+    })
+
+    // Handle dropped files
+    dropzone.addEventListener('drop', this.handleDrop.bind(this), false)
+  }
+
+  preventDefaults(e) {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  highlight(dropzone) {
+    dropzone.classList.add('border-red-500', 'bg-red-50')
+  }
+
+  unhighlight(dropzone) {
+    dropzone.classList.remove('border-red-500', 'bg-red-50')
+  }
+
+  handleDrop(e) {
+    const dt = e.dataTransfer
+    const files = dt.files
+
+    if (files.length > 0) {
+      this.inputTarget.files = files
+      this.updatePreview()
+    }
   }
 
   updatePreview() {
