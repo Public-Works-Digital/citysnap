@@ -1,4 +1,106 @@
-<div>
-  <h1 class="font-bold text-4xl">Pages#home</h1>
-  <p>Find me in app/views/pages/home.html.erb</p>
+<!-- Hero Section -->
+<div class="bg-gradient-to-br from-red-600 to-red-800 text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
+    <div class="text-center">
+      <h1 class="text-4xl sm:text-6xl font-bold mb-6">
+        Report City Issues.<br>
+        Make Your Community Better.
+      </h1>
+      <p class="text-xl sm:text-2xl mb-8 text-red-100 max-w-3xl mx-auto">
+        Snap a photo, pin the location, and help your city fix problems faster.
+        From potholes to broken streetlights, your reports make a difference.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <% if user_signed_in? %>
+          <%= link_to "Report an Issue", new_issue_path, class: "bg-white text-red-600 hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold text-lg transition duration-150 ease-in-out shadow-lg" %>
+          <%= link_to "View My Reports", issues_path, class: "bg-red-700 text-white hover:bg-red-900 px-8 py-4 rounded-lg font-semibold text-lg transition duration-150 ease-in-out border-2 border-red-700" %>
+        <% else %>
+          <%= link_to "Get Started", new_user_registration_path, class: "bg-white text-red-600 hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold text-lg transition duration-150 ease-in-out shadow-lg" %>
+          <%= link_to "Sign In", new_user_session_path, class: "bg-red-700 text-white hover:bg-red-900 px-8 py-4 rounded-lg font-semibold text-lg transition duration-150 ease-in-out border-2 border-red-700" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Features Section -->
+<div class="py-16 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-gray-900">How It Works</h2>
+      <p class="mt-4 text-lg text-gray-600">Three simple steps to report city issues</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Step 1 -->
+      <div class="text-center">
+        <div class="bg-red-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+          <svg class="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Snap a Photo</h3>
+        <p class="text-gray-600">Take a photo of the issue you want to report - potholes, graffiti, broken infrastructure, and more.</p>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="text-center">
+        <div class="bg-red-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+          <svg class="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Pin the Location</h3>
+        <p class="text-gray-600">Use our interactive map to mark the exact location of the issue. GPS automatically finds your position.</p>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="text-center">
+        <div class="bg-red-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+          <svg class="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Submit Report</h3>
+        <p class="text-gray-600">Add a description and submit your report. Track the status as city officials work to resolve the issue.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Stats Section -->
+<div class="bg-gray-50 py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+      <div>
+        <div class="text-4xl font-bold text-red-600 mb-2">500+</div>
+        <div class="text-gray-600">Issues Reported</div>
+      </div>
+      <div>
+        <div class="text-4xl font-bold text-red-600 mb-2">72hrs</div>
+        <div class="text-gray-600">Average Response Time</div>
+      </div>
+      <div>
+        <div class="text-4xl font-bold text-red-600 mb-2">85%</div>
+        <div class="text-gray-600">Issues Resolved</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA Section -->
+<div class="bg-white py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h2 class="text-3xl font-bold text-gray-900 mb-4">Ready to Make a Difference?</h2>
+    <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+      Join your neighbors in reporting city issues and creating a better community for everyone.
+    </p>
+    <% if user_signed_in? %>
+      <%= link_to "Report Your First Issue", new_issue_path, class: "bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition duration-150 ease-in-out shadow-lg inline-block" %>
+    <% else %>
+      <%= link_to "Sign Up for Free", new_user_registration_path, class: "bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition duration-150 ease-in-out shadow-lg inline-block" %>
+    <% end %>
+  </div>
 </div>

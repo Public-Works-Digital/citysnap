@@ -68,3 +68,5 @@ end
 gem "devise", "~> 4.9"
 
 gem "claude-on-rails", "~> 0.2.0", group: :development
+
+gem "hotwire-spark", "~> 0.1.13", group: :development
