@@ -2,6 +2,8 @@ class IssuesController < ApplicationController
   before_action :authenticate_user!, except: %i[ show public ]
   before_action :set_issue, only: %i[  edit update destroy ]
 
+  helper_method :can_edit_issue?
+
   # GET /issues or /issues.json
   def index
     @issues = current_user.issues.all
@@ -86,15 +88,32 @@ class IssuesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_issue
-      if user_signed_in?
-        @issue = current_user.issues.find(params.expect(:id))
-      else
-        @issue = Issue.find(params.expect(:id))
+      @issue = Issue.find(params.expect(:id))
+
+      # Check authorization
+      unless can_edit_issue?(@issue)
+        respond_to do |format|
+          format.html { redirect_to issues_path, alert: "You are not authorized to edit this issue." }
+          format.json { head :forbidden }
+        end
       end
+    end
+
+    # Authorization helper
+    def can_edit_issue?(issue)
+      return false unless user_signed_in?
+
+      # Officers can edit any issue, citizens can only edit their own
+      current_user.officer_user_type? || issue.user_id == current_user.id
     end
 
     # Only allow a list of trusted parameters through.
     def issue_params
-      params.expect(issue: [ :comment, :photo, :latitude, :longitude, :street_address, :category_id ])
+      permitted_params = [ :comment, :photo, :latitude, :longitude, :street_address, :category_id ]
+
+      # Only officers can change status
+      permitted_params << :status if current_user&.officer_user_type?
+
+      params.expect(issue: permitted_params)
     end
 end

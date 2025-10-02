@@ -61,3 +61,28 @@ puts "Created #{Category.count} categories"
 puts "  - #{Category.top_level.count} main categories"
 puts "  - #{Category.where.not(parent_id: nil).where(id: Category.select(:parent_id)).count} sub-categories"
 puts "  - #{Category.leaf_nodes.count} issue types"
+
+# Create sample users (only in development)
+if Rails.env.development?
+  puts "\nCreating sample users..."
+
+  # Create a citizen user
+  citizen = User.find_or_create_by!(email: "citizen@example.com") do |user|
+    user.password = "password"
+    user.password_confirmation = "password"
+    user.user_type = "citizen"
+  end
+  puts "  - Created citizen: #{citizen.email}"
+
+  # Create an officer user
+  officer = User.find_or_create_by!(email: "officer@example.com") do |user|
+    user.password = "password"
+    user.password_confirmation = "password"
+    user.user_type = "officer"
+  end
+  puts "  - Created officer: #{officer.email}"
+
+  puts "Sample users created. You can log in with:"
+  puts "  Citizen: citizen@example.com / password"
+  puts "  Officer: officer@example.com / password"
+end
