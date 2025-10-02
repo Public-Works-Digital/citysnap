@@ -1,0 +1,97 @@
+<% content_for :title, "Account Settings - CitySnap" %>
+
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Account Settings</h1>
+      <p class="mt-2 text-sm text-gray-600">Manage your account information and security</p>
+    </div>
+
+    <!-- Main Form -->
+    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <h2 class="text-lg font-medium text-gray-900">Profile Information</h2>
+      </div>
+
+      <div class="px-6 py-6">
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "space-y-6" }) do |f| %>
+          <%= render "devise/shared/error_messages", resource: resource %>
+
+          <div>
+            <%= f.label :email, "Email address", class: "block text-sm font-medium text-gray-700" %>
+            <div class="mt-1">
+              <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500" %>
+            </div>
+            <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+              <p class="mt-2 text-sm text-amber-600">Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
+            <% end %>
+          </div>
+
+          <div class="border-t border-gray-200 pt-6">
+            <h3 class="text-base font-medium text-gray-900 mb-4">Change Password</h3>
+            <p class="text-sm text-gray-500 mb-4">Leave blank if you don't want to change your password</p>
+
+            <div class="space-y-4">
+              <div>
+                <%= f.label :password, "New password", class: "block text-sm font-medium text-gray-700" %>
+                <% if @minimum_password_length %>
+                  <span class="text-xs text-gray-500">(<%= @minimum_password_length %> characters minimum)</span>
+                <% end %>
+                <div class="mt-1">
+                  <%= f.password_field :password, autocomplete: "new-password", class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500" %>
+                </div>
+              </div>
+
+              <div>
+                <%= f.label :password_confirmation, "Confirm new password", class: "block text-sm font-medium text-gray-700" %>
+                <div class="mt-1">
+                  <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500" %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-t border-gray-200 pt-6">
+            <div>
+              <%= f.label :current_password, "Current password", class: "block text-sm font-medium text-gray-700" %>
+              <p class="text-xs text-gray-500 mb-2">We need your current password to confirm your changes</p>
+              <div class="mt-1">
+                <%= f.password_field :current_password, autocomplete: "current-password", class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500" %>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+            <%= link_to "Cancel", :back, class: "text-gray-700 hover:text-gray-900 font-medium" %>
+            <%= f.submit "Update Account", class: "px-6 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="mt-8 bg-white shadow-lg rounded-lg overflow-hidden border-2 border-red-200">
+      <div class="px-6 py-5 border-b border-red-200 bg-red-50">
+        <h2 class="text-lg font-medium text-red-900">Danger Zone</h2>
+      </div>
+
+      <div class="px-6 py-6">
+        <div class="flex items-start justify-between">
+          <div>
+            <h3 class="text-base font-medium text-gray-900">Delete Account</h3>
+            <p class="mt-1 text-sm text-gray-600">
+              Once you delete your account, there is no going back. All your reported issues will remain visible, but you won't be able to manage them.
+            </p>
+          </div>
+          <div class="ml-6 flex-shrink-0">
+            <%= button_to "Delete Account",
+                registration_path(resource_name),
+                data: { turbo_method: :delete, turbo_confirm: "Are you absolutely sure? This action cannot be undone." },
+                class: "px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
