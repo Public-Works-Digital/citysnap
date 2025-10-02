@@ -1,0 +1,10 @@
+<%= turbo_stream.append "issues-list" do %>
+  <%= render partial: "issues/public_issue_card", collection: @issues, as: :issue %>
+<% end %>
+
+<%= turbo_stream.replace "pagination-anchor" do %>
+  <div id="pagination-anchor"
+       data-next-page="<%= @pagy.next ? @pagy.next : '' %>"
+       data-has-more="<%= @pagy.next.present? %>">
+  </div>
+<% end %>

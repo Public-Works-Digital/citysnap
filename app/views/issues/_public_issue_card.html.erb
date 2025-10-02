@@ -1,0 +1,44 @@
+<div class="border-b border-gray-200 p-4 hover:bg-gray-50 transition-colors cursor-pointer"
+     data-issue-id="<%= issue.id %>"
+     data-latitude="<%= issue.latitude %>"
+     data-longitude="<%= issue.longitude %>"
+     data-action="click->issues-map#highlightIssue">
+  <!-- Issue Header -->
+  <div class="flex items-start justify-between mb-2">
+    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+      #<%= issue.id.to_s.rjust(6, '0') %>
+    </span>
+    <span class="text-xs text-gray-500">
+      <%= issue.created_at.strftime("%b %d") %>
+    </span>
+  </div>
+
+  <!-- Issue Photo -->
+  <% if issue.photo.attached? %>
+    <div class="mb-3">
+      <%= image_tag issue.photo.variant(resize_to_limit: [400, 200]), class: "w-full h-32 object-cover rounded" %>
+    </div>
+  <% end %>
+
+  <!-- Issue Description -->
+  <p class="text-sm text-gray-900 font-medium mb-2 line-clamp-2">
+    <%= issue.comment.presence || "No description provided" %>
+  </p>
+
+  <!-- Location -->
+  <div class="flex items-start text-xs text-gray-600 mb-2">
+    <svg class="text-gray-400 mr-1 mt-0.5 flex-shrink-0" width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+    </svg>
+    <span class="truncate flex-1"><%= issue.street_address %></span>
+  </div>
+
+  <!-- Reporter -->
+  <div class="flex items-center justify-between">
+    <span class="text-xs text-gray-500">
+      by <%= issue.user.email.split('@').first %>
+    </span>
+    <%= link_to "View", issue, class: "text-xs text-red-600 hover:text-red-700 font-medium" %>
+  </div>
+</div>

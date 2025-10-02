@@ -67,6 +67,9 @@ end
 # Use devise for authentication
 gem "devise", "~> 4.9"
 
+# Pagination
+gem "pagy", "~> 9.0"
+
 gem "claude-on-rails", "~> 0.2.0", group: :development
 
 gem "hotwire-spark", "~> 0.1.13", group: :development

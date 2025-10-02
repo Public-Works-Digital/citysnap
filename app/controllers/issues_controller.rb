@@ -9,7 +9,12 @@ class IssuesController < ApplicationController
 
   # GET /issues/public
   def public
-    @issues = Issue.all.includes(:user).order(created_at: :desc)
+    @pagy, @issues = pagy(Issue.where.not(latitude: nil, longitude: nil).includes(:user).order(created_at: :desc), limit: 20)
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
 
   # GET /issues/1 or /issues/1.json
