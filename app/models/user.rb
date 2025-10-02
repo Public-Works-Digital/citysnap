@@ -3,6 +3,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
   has_many :issues, dependent: :destroy
+  has_many :comments, dependent: :destroy
 
   # User type enum
   enum :user_type, { citizen: "citizen", officer: "officer" }, default: "citizen", suffix: true

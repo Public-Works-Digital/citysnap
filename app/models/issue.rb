@@ -2,6 +2,7 @@ class Issue < ApplicationRecord
   belongs_to :user
   belongs_to :category, optional: true  # Will be required after seeding
   has_one_attached :photo
+  has_many :comments, dependent: :destroy
 
   # Status enum
   enum :status, { received: "received", assigned: "assigned", closed: "closed" }, default: "received", suffix: true
