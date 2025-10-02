@@ -34,6 +34,7 @@
       <h1>CitySnap</h1>
       <nav>
         <% if user_signed_in? %>
+          <%= link_to "My Issues", issues_path %>
           <%= link_to "Profile", edit_user_registration_path %>
           <%= button_to "Logout", destroy_user_session_path, method: :delete %>
         <% else %>

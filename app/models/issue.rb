@@ -20,8 +20,13 @@ class Issue < ApplicationRecord
 
   def location_fields_presence
     # Ensure that if one location field is present, all must be present
-    location_fields = [latitude, longitude, street_address]
-    if location_fields.any?(&:present?) && !location_fields.all?(&:present?)
+    # Treat empty strings as nil for consistency
+    lat = latitude.presence
+    lng = longitude.presence
+    addr = street_address.presence
+
+    location_fields = [lat, lng, addr]
+    if location_fields.any? && !location_fields.all?
       errors.add(:base, "All location fields (latitude, longitude, and address) must be provided together")
     end
   end

@@ -2,8 +2,19 @@
 
 one:
   user: one
-  comment: MyText
+  comment: Pothole on Main Street
+  latitude: 40.7128
+  longitude: -74.0060
+  street_address: 123 Main Street, New York
 
 two:
   user: two
-  comment: MyText
+  comment: Broken streetlight
+  latitude: 37.7749
+  longitude: -122.4194
+  street_address: 456 Market Street, San Francisco
+
+# Issue without location (for testing optional location)
+three:
+  user: one
+  comment: General complaint
