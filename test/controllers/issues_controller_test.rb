@@ -147,16 +147,13 @@ class IssuesControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  test "should require authentication for all actions" do
+  test "should require authentication for most actions" do
     sign_out @user
 
     get new_issue_url
     assert_redirected_to new_user_session_url
 
     post issues_url, params: { issue: { comment: "Test" } }
-    assert_redirected_to new_user_session_url
-
-    get issue_url(@issue)
     assert_redirected_to new_user_session_url
 
     get edit_issue_url(@issue)
@@ -167,5 +164,19 @@ class IssuesControllerTest < ActionDispatch::IntegrationTest
 
     delete issue_url(@issue)
     assert_redirected_to new_user_session_url
+  end
+
+  test "should allow public access to show action" do
+    sign_out @user
+
+    get issue_url(@issue)
+    assert_response :success
+  end
+
+  test "should allow public access to public issues page" do
+    sign_out @user
+
+    get public_issues_url
+    assert_response :success
   end
 end

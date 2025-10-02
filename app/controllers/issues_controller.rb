@@ -71,7 +71,11 @@ class IssuesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_issue
-      @issue = current_user.issues.find(params.expect(:id))
+      if user_signed_in?
+        @issue = current_user.issues.find(params.expect(:id))
+      else
+        @issue = Issue.find(params.expect(:id))
+      end
     end
 
     # Only allow a list of trusted parameters through.
