@@ -23,5 +23,9 @@ module Citysnap
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Use Propshaft for asset pipeline (Sprockets only for ActiveAdmin)
+    config.assets.css_compressor = nil
+    config.assets.js_compressor = nil
   end
 end

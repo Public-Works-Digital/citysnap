@@ -1,1 +1,40 @@
 @import "tailwindcss";
+
+/* Leaflet Map Styles */
+.leaflet-container {
+  font-family: inherit;
+  z-index: 1;
+  height: 400px !important; /* Ensure the map has height */
+  width: 100%;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.leaflet-popup-content {
+  margin: 0.75rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.leaflet-popup-tip {
+  background: white;
+}
+
+/* Different heights for edit vs view maps */
+.map-view-container .leaflet-container {
+  height: 250px !important;
+}
+
+/* Ensure map containers have proper height on mobile */
+@media (max-width: 640px) {
+  .leaflet-container {
+    height: 300px !important;
+  }
+
+  .map-view-container .leaflet-container {
+    height: 200px !important;
+  }
+}

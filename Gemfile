@@ -4,6 +4,8 @@ source "https://rubygems.org"
 gem "rails", "~> 8.0.3"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
+# Sprockets for ActiveAdmin compatibility
+gem "sprockets-rails"
 # Use sqlite3 as the database for Active Record
 gem "sqlite3", ">= 2.1"
 # Use the Puma web server [https://github.com/puma/puma]
@@ -72,6 +74,10 @@ gem "pagy", "~> 9.0"
 
 # Database-backed session store for multi-machine deployments
 gem "activerecord-session_store"
+
+# Admin dashboard
+gem "activeadmin"
+gem "sassc-rails"
 
 gem "claude-on-rails", "~> 0.2.0", group: :development
 

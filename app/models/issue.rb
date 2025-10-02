@@ -22,6 +22,20 @@ class Issue < ApplicationRecord
   validates :status, presence: true
   validates :status, inclusion: { in: %w[received assigned closed] }
 
+  # Ransack configuration for ActiveAdmin
+  def self.ransackable_attributes(auth_object = nil)
+    %w[id user_id comment latitude longitude street_address status category_id created_at updated_at]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    %w[user category comments]
+  end
+
+  # Exclude ActiveStorage associations from Ransack
+  def self.ransortable_attributes(auth_object = nil)
+    ransackable_attributes(auth_object)
+  end
+
   # Category validation - ensure it's a leaf node (level 3)
   validate :category_must_be_leaf_node, if: :category_id?
 

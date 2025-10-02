@@ -86,3 +86,30 @@ if Rails.env.development?
   puts "  Citizen: citizen@example.com / password"
   puts "  Officer: officer@example.com / password"
 end
+
+# Create admin user (all environments)
+puts "\nCreating admin user..."
+
+admin = User.find_or_initialize_by(email: "admin@citysnap.com")
+
+if admin.new_record?
+  # Generate a random temporary password
+  temp_password = SecureRandom.hex(16)
+  admin.password = temp_password
+  admin.password_confirmation = temp_password
+  admin.user_type = "admin"
+  admin.save!
+
+  # Generate password reset token
+  raw_token, encrypted_token = Devise.token_generator.generate(User, :reset_password_token)
+  admin.reset_password_token = encrypted_token
+  admin.reset_password_sent_at = Time.current
+  admin.save!
+
+  puts "  - Created admin user: #{admin.email}"
+  puts "  - A password reset is required on first login"
+  puts "  - Password reset URL: http://localhost:3000/users/password/edit?reset_password_token=#{raw_token}"
+  puts "  - Use this URL to set your admin password on first login"
+else
+  puts "  - Admin user already exists: #{admin.email}"
+end

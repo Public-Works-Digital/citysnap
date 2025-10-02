@@ -15,6 +15,15 @@ class Category < ApplicationRecord
   scope :ordered, -> { order(:position, :name) }
   scope :leaf_nodes, -> { left_joins(:children).where(children_categories: { id: nil }) }
 
+  # Ransack configuration for ActiveAdmin
+  def self.ransackable_attributes(auth_object = nil)
+    %w[id name description parent_id position active created_at updated_at]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    %w[parent children issues]
+  end
+
   # Instance methods
   def level
     return 1 if parent_id.nil?
