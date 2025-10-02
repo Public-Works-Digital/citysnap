@@ -60,7 +60,7 @@ class IssuesControllerTest < ActionDispatch::IntegrationTest
     assert_no_difference("Issue.count") do
       post issues_url, params: { issue: {
         comment: "Test issue",
-        latitude: 40.7128,
+        latitude: 40.7128
         # Missing longitude and street_address
       } }
     end

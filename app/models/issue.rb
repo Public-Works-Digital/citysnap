@@ -25,7 +25,7 @@ class Issue < ApplicationRecord
     lng = longitude.presence
     addr = street_address.presence
 
-    location_fields = [lat, lng, addr]
+    location_fields = [ lat, lng, addr ]
     if location_fields.any? && !location_fields.all?
       errors.add(:base, "All location fields (latitude, longitude, and address) must be provided together")
     end
