@@ -4,6 +4,24 @@ class Issue < ApplicationRecord
   has_one_attached :photo
   has_many :comments, dependent: :destroy
 
+  # File upload validations
+  validate :acceptable_photo
+
+  def acceptable_photo
+    return unless photo.attached?
+
+    # Check file size (max 10MB)
+    if photo.blob.byte_size > 10.megabytes
+      errors.add(:photo, "is too large (maximum is 10MB)")
+    end
+
+    # Check file type
+    acceptable_types = [ "image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp" ]
+    unless acceptable_types.include?(photo.blob.content_type)
+      errors.add(:photo, "must be a JPEG, PNG, GIF, or WebP image")
+    end
+  end
+
   # Status enum
   enum :status, { received: "received", assigned: "assigned", closed: "closed" }, default: "received", suffix: true
 
