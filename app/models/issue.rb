@@ -2,6 +2,18 @@ class Issue < ApplicationRecord
   belongs_to :user
   has_one_attached :photo
 
+  # Status enum
+  enum :status, { received: "received", assigned: "assigned", closed: "closed" }, default: "received", suffix: true
+
+  # Status scopes
+  scope :received, -> { where(status: "received") }
+  scope :assigned, -> { where(status: "assigned") }
+  scope :closed, -> { where(status: "closed") }
+
+  # Status validations
+  validates :status, presence: true
+  validates :status, inclusion: { in: %w[received assigned closed] }
+
   # Location validations - only validate if present to allow existing issues without location
   validates :latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }, allow_nil: true
   validates :longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }, allow_nil: true
@@ -14,6 +26,17 @@ class Issue < ApplicationRecord
 
   def has_location?
     latitude.present? && longitude.present?
+  end
+
+  def status_badge_color
+    case status
+    when "received"
+      "bg-gray-100 text-gray-800"
+    when "assigned"
+      "bg-blue-100 text-blue-800"
+    when "closed"
+      "bg-green-100 text-green-800"
+    end
   end
 
   private

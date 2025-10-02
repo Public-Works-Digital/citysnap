@@ -40,6 +40,7 @@ class IssuesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 40.7128, Issue.last.latitude
     assert_equal -74.0060, Issue.last.longitude
     assert_equal "123 Test Street, New York", Issue.last.street_address
+    assert_equal "received", Issue.last.status
   end
 
   test "should create issue without location" do
@@ -54,6 +55,7 @@ class IssuesControllerTest < ActionDispatch::IntegrationTest
     assert_nil Issue.last.latitude
     assert_nil Issue.last.longitude
     assert_nil Issue.last.street_address
+    assert_equal "received", Issue.last.status
   end
 
   test "should not create issue with partial location" do
