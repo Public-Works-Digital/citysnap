@@ -82,9 +82,11 @@ Rails.application.configure do
   # Enable DNS rebinding protection and other `Host` header attacks.
   # IMPORTANT: Update these values with your actual production domains
   config.hosts = [
-    "localhost",              # For local testing (remove in production)
-    "citysnap.com",          # Replace with your actual domain
-    /.*\.citysnap\.com/      # Replace with your actual domain pattern
+    "localhost",              # For local testing
+    "citysnap.fly.dev",      # Fly.io domain
+    /.*\.fly\.dev/,          # All Fly.io subdomains
+    "citysnap.com",          # Your custom domain (when you add it)
+    /.*\.citysnap\.com/      # Your custom domain subdomains
   ]
 
   # Skip DNS rebinding protection for the default health check endpoint.
