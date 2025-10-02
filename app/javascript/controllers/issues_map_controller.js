@@ -4,20 +4,15 @@ export default class extends Controller {
   static targets = ["container", "sidebar", "loader", "count"]
 
   connect() {
-    this.initializeMap()
-    this.loadMarkers()
     this.currentPage = 1
     this.loading = false
     this.hasMore = document.getElementById('pagination-anchor').dataset.hasMore === 'true'
+    this.initializeMap()
   }
 
   initializeMap() {
-    // Initialize the map centered on the first issue or a default location
-    const firstIssue = this.getIssuesData()[0]
-    const centerLat = firstIssue?.latitude || 40.7128
-    const centerLng = firstIssue?.longitude || -74.0060
-
-    this.map = L.map(this.containerTarget).setView([centerLat, centerLng], 12)
+    // Initialize the map with a default location (will be updated by geolocation)
+    this.map = L.map(this.containerTarget).setView([40.7128, -74.0060], 13)
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors',
@@ -26,6 +21,32 @@ export default class extends Controller {
 
     this.markers = []
     this.markerLayer = L.layerGroup().addTo(this.map)
+
+    // Try to get user's current location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userLat = position.coords.latitude
+          const userLng = position.coords.longitude
+
+          // Set zoom level to approximately 500 feet view (zoom level 17-18)
+          this.map.setView([userLat, userLng], 17)
+        },
+        (error) => {
+          console.log('Geolocation error:', error)
+          // If geolocation fails, load markers for default view
+          this.loadMarkers()
+        }
+      )
+    } else {
+      // If geolocation not supported, load markers for default view
+      this.loadMarkers()
+    }
+
+    // Add event listener for map movement
+    this.map.on('moveend', () => {
+      this.refreshIssuesForBounds()
+    })
   }
 
   loadMarkers() {
@@ -34,12 +55,6 @@ export default class extends Controller {
     issues.forEach(issue => {
       this.addMarker(issue)
     })
-
-    // Fit map bounds to show all markers
-    if (this.markers.length > 0) {
-      const group = L.featureGroup(this.markers)
-      this.map.fitBounds(group.getBounds().pad(0.1))
-    }
   }
 
   addMarker(issue) {
@@ -129,8 +144,17 @@ export default class extends Controller {
 
     const nextPage = document.getElementById('pagination-anchor').dataset.nextPage
 
+    // Include current map bounds in the request
+    const bounds = this.map.getBounds()
+    const boundsParams = JSON.stringify({
+      north: bounds.getNorth(),
+      south: bounds.getSouth(),
+      east: bounds.getEast(),
+      west: bounds.getWest()
+    })
+
     try {
-      const response = await fetch(`/issues/public?page=${nextPage}`, {
+      const response = await fetch(`/issues/public?page=${nextPage}&bounds=${encodeURIComponent(boundsParams)}`, {
         headers: {
           'Accept': 'text/vnd.turbo-stream.html'
         }
@@ -188,6 +212,60 @@ export default class extends Controller {
     // Update total count
     if (this.hasCountTarget) {
       this.countTarget.textContent = currentIssues.length
+    }
+  }
+
+  async refreshIssuesForBounds() {
+    if (this.loading) return
+
+    const bounds = this.map.getBounds()
+    const boundsParams = JSON.stringify({
+      north: bounds.getNorth(),
+      south: bounds.getSouth(),
+      east: bounds.getEast(),
+      west: bounds.getWest()
+    })
+
+    this.loading = true
+    this.loaderTarget?.classList.remove('hidden')
+
+    try {
+      const response = await fetch(`/issues/public?bounds=${encodeURIComponent(boundsParams)}`, {
+        headers: {
+          'Accept': 'text/html'
+        }
+      })
+
+      if (response.ok) {
+        const html = await response.text()
+
+        // Parse the response to extract the issues list
+        const parser = new DOMParser()
+        const doc = parser.parseFromString(html, 'text/html')
+        const newIssuesList = doc.getElementById('issues-list')
+        const newPaginationAnchor = doc.getElementById('pagination-anchor')
+
+        if (newIssuesList) {
+          // Replace the issues list
+          document.getElementById('issues-list').innerHTML = newIssuesList.innerHTML
+
+          // Update pagination anchor
+          if (newPaginationAnchor) {
+            document.getElementById('pagination-anchor').outerHTML = newPaginationAnchor.outerHTML
+            this.hasMore = document.getElementById('pagination-anchor').dataset.hasMore === 'true'
+          }
+
+          // Clear existing markers and add new ones
+          this.markerLayer.clearLayers()
+          this.markers = []
+          this.loadMarkers()
+        }
+      }
+    } catch (error) {
+      console.error('Error refreshing issues:', error)
+    } finally {
+      this.loading = false
+      this.loaderTarget?.classList.add('hidden')
     }
   }
 }

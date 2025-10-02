@@ -9,7 +9,20 @@ class IssuesController < ApplicationController
 
   # GET /issues/public
   def public
-    @pagy, @issues = pagy(Issue.where.not(latitude: nil, longitude: nil).includes(:user).order(created_at: :desc), limit: 20)
+    issues_scope = Issue.where.not(latitude: nil, longitude: nil).includes(:user)
+
+    # Filter by map bounds if provided
+    if params[:bounds].present?
+      bounds = JSON.parse(params[:bounds])
+      issues_scope = issues_scope.within_bounds(
+        bounds["south"],
+        bounds["west"],
+        bounds["north"],
+        bounds["east"]
+      )
+    end
+
+    @pagy, @issues = pagy(issues_scope.order(created_at: :desc), limit: 20)
 
     respond_to do |format|
       format.html

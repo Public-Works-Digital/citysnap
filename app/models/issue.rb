@@ -10,6 +10,12 @@ class Issue < ApplicationRecord
   scope :assigned, -> { where(status: "assigned") }
   scope :closed, -> { where(status: "closed") }
 
+  # Geographic scope for filtering by map bounds
+  scope :within_bounds, ->(south, west, north, east) {
+    where("latitude >= ? AND latitude <= ? AND longitude >= ? AND longitude <= ?",
+          south, north, west, east)
+  }
+
   # Status validations
   validates :status, presence: true
   validates :status, inclusion: { in: %w[received assigned closed] }
