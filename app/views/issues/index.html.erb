@@ -9,7 +9,69 @@
           <h1 class="text-3xl font-bold text-gray-900">My Reported Issues</h1>
           <p class="mt-2 text-sm text-gray-600">Track and manage all your city issue reports</p>
         </div>
-        <div class="mt-4 sm:mt-0">
+        <div class="mt-4 sm:mt-0 flex items-center gap-3">
+          <!-- Filter Dropdown -->
+          <div class="relative" data-controller="filter" data-action="click@window->filter#close">
+            <button type="button"
+                    data-action="click->filter#toggle"
+                    class="inline-flex items-center px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out">
+              <svg class="h-5 w-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+              </svg>
+              Filter
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div data-filter-target="menu" class="hidden absolute right-0 mt-2 w-72 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+              <div class="p-4">
+                <%= form_with url: issues_path, method: :get, local: true, class: "space-y-4" do |form| %>
+                  <!-- Status Filter -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                    <div class="space-y-2">
+                      <label class="flex items-center">
+                        <%= radio_button_tag :status, "", params[:status].blank?, class: "h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300" %>
+                        <span class="ml-2 text-sm text-gray-700">All</span>
+                      </label>
+                      <label class="flex items-center">
+                        <%= radio_button_tag :status, "received", params[:status] == "received", class: "h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300" %>
+                        <span class="ml-2 text-sm text-gray-700">Received</span>
+                      </label>
+                      <label class="flex items-center">
+                        <%= radio_button_tag :status, "assigned", params[:status] == "assigned", class: "h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300" %>
+                        <span class="ml-2 text-sm text-gray-700">Assigned</span>
+                      </label>
+                      <label class="flex items-center">
+                        <%= radio_button_tag :status, "closed", params[:status] == "closed", class: "h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300" %>
+                        <span class="ml-2 text-sm text-gray-700">Closed</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Category Filter -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                    <%= form.select :category_id,
+                        options_from_collection_for_select(
+                          Category.active.leaf_nodes.ordered,
+                          :id,
+                          :full_name,
+                          params[:category_id]
+                        ),
+                        { include_blank: "All Categories" },
+                        class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 text-sm" %>
+                  </div>
+
+                  <!-- Actions -->
+                  <div class="flex gap-2 pt-2">
+                    <%= form.submit "Apply", class: "flex-1 bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
+                    <%= link_to "Clear", issues_path, class: "flex-1 bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 text-center" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+
           <%= link_to new_issue_path, class: "inline-flex items-center px-6 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out" do %>
             <svg class="-ml-1 mr-3" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />

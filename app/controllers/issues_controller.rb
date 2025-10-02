@@ -7,11 +7,32 @@ class IssuesController < ApplicationController
   # GET /issues or /issues.json
   def index
     @issues = current_user.issues.all
+
+    # Apply filters
+    if params[:status].present?
+      @issues = @issues.where(status: params[:status])
+    end
+
+    if params[:category_id].present?
+      @issues = @issues.where(category_id: params[:category_id])
+    end
+
+    @issues = @issues.order(created_at: :desc)
   end
 
   # GET /issues/public
   def public
-    issues_scope = Issue.where.not(latitude: nil, longitude: nil).includes(:user)
+    issues_scope = Issue.where.not(latitude: nil, longitude: nil).includes(:user, :category)
+
+    # Apply status filter
+    if params[:status].present?
+      issues_scope = issues_scope.where(status: params[:status])
+    end
+
+    # Apply category filter
+    if params[:category_id].present?
+      issues_scope = issues_scope.where(category_id: params[:category_id])
+    end
 
     # Filter by map bounds if provided
     if params[:bounds].present?

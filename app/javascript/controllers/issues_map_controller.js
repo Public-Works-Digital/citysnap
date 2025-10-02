@@ -154,7 +154,13 @@ export default class extends Controller {
     })
 
     try {
-      const response = await fetch(`/issues/public?page=${nextPage}&bounds=${encodeURIComponent(boundsParams)}`, {
+      // Build URL with current filter parameters from the page URL
+      const currentUrl = new URL(window.location.href)
+      const params = new URLSearchParams(currentUrl.search)
+      params.set('page', nextPage)
+      params.set('bounds', boundsParams)
+
+      const response = await fetch(`/issues/public?${params.toString()}`, {
         headers: {
           'Accept': 'text/vnd.turbo-stream.html'
         }
@@ -230,7 +236,12 @@ export default class extends Controller {
     this.loaderTarget?.classList.remove('hidden')
 
     try {
-      const response = await fetch(`/issues/public?bounds=${encodeURIComponent(boundsParams)}`, {
+      // Build URL with current filter parameters from the page URL
+      const currentUrl = new URL(window.location.href)
+      const params = new URLSearchParams(currentUrl.search)
+      params.set('bounds', boundsParams)
+
+      const response = await fetch(`/issues/public?${params.toString()}`, {
         headers: {
           'Accept': 'text/html'
         }
