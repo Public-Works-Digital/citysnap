@@ -1,5 +1,4 @@
 ActiveAdmin.register Issue do
-
   permit_params :user_id, :comment, :latitude, :longitude, :street_address, :status, :category_id, :photo
 
   # Remove default filters and add only the ones we want
@@ -17,7 +16,7 @@ ActiveAdmin.register Issue do
     f.inputs do
       f.input :user
       f.input :category, as: :select, collection: Category.active.leaf_nodes.ordered
-      f.input :status, as: :select, collection: Issue.statuses.keys.map { |k| [k.titleize, k] }
+      f.input :status, as: :select, collection: Issue.statuses.keys.map { |k| [ k.titleize, k ] }
       f.input :comment
       f.input :street_address
       f.input :latitude
@@ -26,5 +25,4 @@ ActiveAdmin.register Issue do
     end
     f.actions
   end
-
 end

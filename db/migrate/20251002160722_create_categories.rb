@@ -12,7 +12,7 @@ class CreateCategories < ActiveRecord::Migration[8.0]
 
     add_index :categories, :parent_id
     add_index :categories, :active
-    add_index :categories, [:parent_id, :position]
+    add_index :categories, [ :parent_id, :position ]
     add_foreign_key :categories, :categories, column: :parent_id
   end
 end

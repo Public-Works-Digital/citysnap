@@ -41,11 +41,11 @@ class Category < ApplicationRecord
 
   def ancestors
     return [] if parent.nil?
-    parent.ancestors + [parent]
+    parent.ancestors + [ parent ]
   end
 
   def descendants
-    children.flat_map { |child| [child] + child.descendants }
+    children.flat_map { |child| [ child ] + child.descendants }
   end
 
   def siblings

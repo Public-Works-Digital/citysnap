@@ -64,8 +64,8 @@ class CategoryTest < ActiveSupport::TestCase
     leaf = Category.create!(name: "Leaf", parent: sub)
 
     assert_equal [], main.ancestors
-    assert_equal [main], sub.ancestors
-    assert_equal [main, sub], leaf.ancestors
+    assert_equal [ main ], sub.ancestors
+    assert_equal [ main, sub ], leaf.ancestors
   end
 
   test "should scope top_level categories" do
