@@ -11,7 +11,7 @@ export default class extends Controller {
   }
 
   initializeMap() {
-    // Initialize the map with a default location (will be updated by geolocation)
+    // Initialize the map with a default location
     this.map = L.map(this.containerTarget).setView([40.7128, -74.0060], 13)
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -22,31 +22,64 @@ export default class extends Controller {
     this.markers = []
     this.markerLayer = L.layerGroup().addTo(this.map)
 
-    // Try to get user's current location
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userLat = position.coords.latitude
-          const userLng = position.coords.longitude
+    // Try to restore saved map position first
+    const savedPosition = this.getSavedMapPosition()
 
-          // Set zoom level to approximately 500 feet view (zoom level 17-18)
-          this.map.setView([userLat, userLng], 17)
-        },
-        (error) => {
-          console.log('Geolocation error:', error)
-          // If geolocation fails, load markers for default view
-          this.loadMarkers()
-        }
-      )
-    } else {
-      // If geolocation not supported, load markers for default view
+    if (savedPosition && !this.isExpired(savedPosition.timestamp)) {
+      // Use saved position if it's less than 24 hours old
+      this.map.setView([savedPosition.lat, savedPosition.lng], savedPosition.zoom)
       this.loadMarkers()
+    } else {
+      // Try to get user's current location
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userLat = position.coords.latitude
+            const userLng = position.coords.longitude
+
+            // Set zoom level to approximately 500 feet view (zoom level 17-18)
+            this.map.setView([userLat, userLng], 17)
+            this.saveMapPosition()
+          },
+          (error) => {
+            console.log('Geolocation error:', error)
+            // If geolocation fails, load markers for default view
+            this.loadMarkers()
+          }
+        )
+      } else {
+        // If geolocation not supported, load markers for default view
+        this.loadMarkers()
+      }
     }
 
-    // Add event listener for map movement
+    // Add event listener for map movement - save position after user moves map
     this.map.on('moveend', () => {
+      this.saveMapPosition()
       this.refreshIssuesForBounds()
     })
+  }
+
+  saveMapPosition() {
+    const center = this.map.getCenter()
+    const zoom = this.map.getZoom()
+    const position = {
+      lat: center.lat,
+      lng: center.lng,
+      zoom: zoom,
+      timestamp: Date.now()
+    }
+    localStorage.setItem('citysnap_map_position', JSON.stringify(position))
+  }
+
+  getSavedMapPosition() {
+    const saved = localStorage.getItem('citysnap_map_position')
+    return saved ? JSON.parse(saved) : null
+  }
+
+  isExpired(timestamp) {
+    const oneDayInMs = 24 * 60 * 60 * 1000
+    return (Date.now() - timestamp) > oneDayInMs
   }
 
   loadMarkers() {
