@@ -18,13 +18,35 @@
         <%= image_tag issue.photo.variant(resize_to_limit: [300, 300]), class: "rounded-md" %>
       </div>
     <% end %>
-    <%= form.label :new_photo %>
+    <%= form.label :photo, "Photo" %>
     <%= form.file_field :photo, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": issue.errors[:photo].none?, "border-red-400 focus:outline-red-600": issue.errors[:photo].any?}] %>
   </div>
 
   <div class="my-5">
     <%= form.label :comment %>
     <%= form.textarea :comment, rows: 4, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": issue.errors[:comment].none?, "border-red-400 focus:outline-red-600": issue.errors[:comment].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :location, "Issue Location", class: "block font-medium mb-2" %>
+    <p class="text-sm text-gray-600 mb-2">Click on the map or drag the pin to set the issue location</p>
+
+    <div data-controller="map"
+         data-map-latitude-value="<%= issue.latitude %>"
+         data-map-longitude-value="<%= issue.longitude %>"
+         data-map-address-value="<%= issue.street_address %>"
+         data-map-editable-value="true"
+         class="relative">
+      <div data-map-target="container" class="w-full rounded-md border border-gray-300"></div>
+
+      <%= form.hidden_field :latitude, data: { map_target: "latitude" } %>
+      <%= form.hidden_field :longitude, data: { map_target: "longitude" } %>
+      <%= form.hidden_field :street_address, data: { map_target: "address" } %>
+    </div>
+
+    <% if issue.errors[:latitude].any? || issue.errors[:longitude].any? || issue.errors[:street_address].any? %>
+      <p class="text-red-500 text-sm mt-2">Please select a location on the map</p>
+    <% end %>
   </div>
 
   <div class="inline">

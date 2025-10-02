@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_01_210416) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_02_000131) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -44,6 +44,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_01_210416) do
     t.text "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "latitude", precision: 10, scale: 8
+    t.decimal "longitude", precision: 11, scale: 8
+    t.string "street_address"
+    t.index ["latitude", "longitude"], name: "index_issues_on_latitude_and_longitude"
     t.index ["user_id"], name: "index_issues_on_user_id"
   end
 

@@ -10,4 +10,21 @@
     <strong class="block font-medium mb-1">Comment:</strong>
     <%= issue.comment %>
   </div>
+
+  <% if issue.has_location? %>
+    <div>
+      <strong class="block font-medium mb-1">Location:</strong>
+      <p class="mb-2"><%= issue.street_address %></p>
+      <p class="text-sm text-gray-600 mb-2">Coordinates: <%= issue.formatted_coordinates %></p>
+
+      <div data-controller="map"
+           data-map-latitude-value="<%= issue.latitude %>"
+           data-map-longitude-value="<%= issue.longitude %>"
+           data-map-address-value="<%= issue.street_address %>"
+           data-map-editable-value="false"
+           class="map-view-container">
+        <div data-map-target="container" class="w-full rounded-md border border-gray-300"></div>
+      </div>
+    </div>
+  <% end %>
 </div>

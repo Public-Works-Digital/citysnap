@@ -66,6 +66,6 @@ class IssuesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def issue_params
-      params.expect(issue: [ :comment, :photo ])
+      params.expect(issue: [ :comment, :photo, :latitude, :longitude, :street_address ])
     end
 end
